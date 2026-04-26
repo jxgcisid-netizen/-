@@ -11,8 +11,6 @@
             --border: #252525;
             --text: #c0c0c0;
             --dim: #666;
-            --accent: #ff6b35;
-            --green: #4ade80;
         }
 
         * {
@@ -260,68 +258,15 @@
             width: 0%;
         }
 
-        /* 疯狂验证页 - 交互式 */
-        .verify-list {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin: 20px 0;
-            max-height: 380px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-        .verify-list::-webkit-scrollbar {
-            width: 3px;
-        }
-        .verify-list::-webkit-scrollbar-thumb {
-            background: #2a2a2a;
-            border-radius: 3px;
-        }
-
-        .verify-item {
+        /* 验证交互组件 */
+        .verify-action-area {
             background: #0d0d0d;
             border: 1px solid var(--border);
             border-radius: 6px;
-            padding: 16px;
-            text-align: left;
-            transition: all 0.2s;
-        }
-        .verify-item.done {
-            border-color: #1a3a1a;
-        }
-        .verify-item.failed {
-            border-color: #3a1a1a;
+            padding: 20px;
+            margin: 16px 0;
         }
 
-        .v-label {
-            font-size: 11px;
-            color: #555;
-            letter-spacing: 2px;
-            margin-bottom: 8px;
-        }
-        .v-task {
-            font-size: 13px;
-            color: #ccc;
-            margin-bottom: 12px;
-            line-height: 1.5;
-        }
-
-        .v-status {
-            font-size: 11px;
-            margin-top: 8px;
-            font-weight: 500;
-        }
-        .v-status.correct {
-            color: #4ade80;
-        }
-        .v-status.wrong {
-            color: #ef4444;
-        }
-        .v-status.pending {
-            color: #555;
-        }
-
-        /* 滑块验证 */
         .slider-wrap {
             position: relative;
             width: 100%;
@@ -339,8 +284,8 @@
             height: 100%;
             background: #1a2a1a;
             border-radius: 6px;
-            transition: width 0.1s;
             width: 0%;
+            transition: width 0.05s;
         }
         .slider-thumb {
             position: absolute;
@@ -356,7 +301,6 @@
             justify-content: center;
             font-size: 18px;
             color: #888;
-            transition: left 0.05s;
             z-index: 2;
         }
         .slider-thumb:active {
@@ -375,7 +319,30 @@
             z-index: 1;
         }
 
-        /* 拼图点击 */
+        .click-target {
+            width: 100%;
+            height: 70px;
+            background: #111;
+            border: 1px solid #1f1f1f;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            transition: all 0.1s;
+            user-select: none;
+        }
+        .click-target:active {
+            transform: scale(0.95);
+            background: #1a1a1a;
+        }
+        .click-counter {
+            font-size: 12px;
+            color: #888;
+            margin-top: 6px;
+        }
+
         .puzzle-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -390,45 +357,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
             transition: all 0.15s;
         }
         .puzzle-cell:hover {
             background: #1a1a1a;
-            border-color: #333;
         }
-        .puzzle-cell.clicked {
-            background: #1a2a1a;
-            border-color: #4ade80;
-        }
-
-        /* 多次点击 */
-        .click-target {
-            width: 100%;
-            height: 80px;
-            background: #111;
-            border: 1px solid #1f1f1f;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            transition: all 0.1s;
-            user-select: none;
-        }
-        .click-target:active {
-            transform: scale(0.95);
-            background: #1a1a1a;
-        }
-        .click-counter {
-            font-size: 12px;
-            color: #888;
-            text-align: center;
-            margin-top: 6px;
+        .puzzle-cell.done {
+            opacity: 0.4;
+            pointer-events: none;
         }
 
-        /* 结果页 */
         .score-display {
             font-size: 72px;
             font-weight: 200;
@@ -491,17 +430,16 @@
         <button class="btn btn-primary" id="btnNextQuestion" onclick="nextQuestion()" style="margin-top:16px;">下一题</button>
     </div>
 
-    <!-- ========== 终极验证页（交互式） ========== -->
+    <!-- ========== 终极验证（逐关） ========== -->
     <div class="card" id="screen-verify" style="display:none;">
-        <div class="card-header">FINAL VERIFICATION</div>
-        <h2>终极验证</h2>
-        <p class="subtitle">在显示结果之前，请完成以下所有交互验证</p>
+        <div class="card-header" id="verifyHeader">FINAL VERIFICATION</div>
+        <h2 id="verifyTitle">终极验证</h2>
+        <p class="subtitle" id="verifySubtitle"></p>
         <div class="progress-wrap">
             <div class="progress-bar" id="verifyProgress" style="width:0%;"></div>
         </div>
-        <div class="verify-list" id="verifyList"></div>
-        <p class="error" id="verifyError">请完成所有验证项后提交</p>
-        <button class="btn btn-primary" id="btnVerifySubmit" onclick="submitVerification()" style="margin-top:8px;">提交验证</button>
+        <div class="verify-action-area" id="verifyActionArea"></div>
+        <p class="error" id="verifyError"></p>
     </div>
 
     <!-- ========== 结果页 ========== -->
@@ -548,10 +486,23 @@
             },
         ];
 
+        // ============ 验证关卡定义 ============
+        const verifyStages = [
+            { type: 'slider', task: '将滑块拖动到最右边', hint: '拖到 100%', reverse: false, middle: false },
+            { type: 'clicker', task: '连续点击按钮 20 次', target: 20 },
+            { type: 'puzzle', task: '在 16 个方块中找到颜色不同的那一个并点击', },
+            { type: 'slider', task: '将滑块拖动到最左边', hint: '拖到 0%', reverse: true, middle: false },
+            { type: 'timed', task: '10 秒内点击按钮 50 次', target: 50, seconds: 10 },
+            { type: 'numbers', task: '按从小到大的顺序依次点击数字 1-9', },
+            { type: 'slider', task: '将滑块精确停在正中间', hint: '停在 45%-55%', reverse: false, middle: true },
+            { type: 'hold', task: '按住下方按钮持续 3 秒钟', seconds: 3 },
+        ];
+
         let currentQuestion = 0;
         let selectedOption = -1;
         let quizAnswers = [];
-        let verifyResults = new Array(8).fill(null); // null=未完成, true=通过, false=失败
+        let currentVerify = 0;
+        let verifyResults = []; // true/false
 
         // ============ 屏幕切换 ============
         function goScreen(name) {
@@ -567,9 +518,9 @@
                 loadQuestion();
             }
             if (name === 'verify') {
-                verifyResults = new Array(8).fill(null);
-                renderAllVerifications();
-                updateVerifyProgress();
+                currentVerify = 0;
+                verifyResults = [];
+                loadVerifyStage();
             }
         }
 
@@ -664,282 +615,231 @@
             }
         }
 
-        // ============ 终极验证 - 全部交互式 ============
-        function renderAllVerifications() {
-            const list = document.getElementById('verifyList');
-            list.innerHTML = '';
+        // ============ 终极验证逐关 ============
+        function loadVerifyStage() {
+            const stage = verifyStages[currentVerify];
+            document.getElementById('verifyHeader').textContent = 'FINAL VERIFICATION';
+            document.getElementById('verifyTitle').textContent = `终极验证 ${currentVerify + 1}/${verifyStages.length}`;
+            document.getElementById('verifySubtitle').textContent = stage.task;
+            document.getElementById('verifyProgress').style.width = ((currentVerify / verifyStages.length) * 100) + '%';
+            document.getElementById('verifyError').classList.remove('show');
+            document.getElementById('verifyError').textContent = '';
 
-            // 验证1：滑块到底
-            list.appendChild(buildVerificationItem(0, '验证 1/8', '将滑块拖动到最右边', createSlider(0)));
+            const area = document.getElementById('verifyActionArea');
+            area.innerHTML = '';
 
-            // 验证2：连续点击20次
-            list.appendChild(buildVerificationItem(1, '验证 2/8', '连续点击下方按钮 20 次', createClickCounter(1, 20)));
-
-            // 验证3：找到唯一不同的颜色块
-            list.appendChild(buildVerificationItem(2, '验证 3/8', '在 16 个方块中找到颜色不同的那一个并点击', createColorPuzzle(2)));
-
-            // 验证4：滑块再拖一次（但是反向）
-            list.appendChild(buildVerificationItem(3, '验证 4/8', '将滑块拖动到最左边', createSlider(3, true)));
-
-            // 验证5：疯狂点击10秒内点50次
-            list.appendChild(buildVerificationItem(4, '验证 5/8', '10 秒内点击按钮 50 次', createTimedClicker(4, 50, 10)));
-
-            // 验证6：点9个格子按顺序
-            list.appendChild(buildVerificationItem(5, '验证 6/8', '按从小到大的顺序依次点击数字', createNumberGrid(5)));
-
-            // 验证7：滑块拖到正中间（±5%容差）
-            list.appendChild(buildVerificationItem(6, '验证 7/8', '将滑块精确停在正中间（50%位置）', createSlider(6, false, true)));
-
-            // 验证8：按住按钮不放3秒
-            list.appendChild(buildVerificationItem(7, '验证 8/8', '按住下方按钮持续 3 秒钟', createHoldButton(7, 3)));
-        }
-
-        function buildVerificationItem(index, label, task, innerHtml) {
-            const div = document.createElement('div');
-            div.className = 'verify-item';
-            div.id = 'verify-item-' + index;
-            div.innerHTML = `
-                <div class="v-label">${label}</div>
-                <div class="v-task">${task}</div>
-                ${innerHtml}
-                <div class="v-status pending" id="v-status-${index}">等待完成</div>
-            `;
-            return div;
-        }
-
-        function updateVerifyStatus(index, passed, msg) {
-            verifyResults[index] = passed;
-            const item = document.getElementById('verify-item-' + index);
-            const status = document.getElementById('v-status-' + index);
-            if (item) {
-                item.classList.remove('done', 'failed');
-                item.classList.add(passed ? 'done' : 'failed');
+            switch (stage.type) {
+                case 'slider':
+                    area.innerHTML = buildSlider(stage.reverse, stage.middle, stage.hint);
+                    initSlider(stage.reverse, stage.middle);
+                    break;
+                case 'clicker':
+                    area.innerHTML = buildClicker(stage.target);
+                    initClicker(stage.target);
+                    break;
+                case 'puzzle':
+                    area.innerHTML = buildPuzzle();
+                    initPuzzle();
+                    break;
+                case 'timed':
+                    area.innerHTML = buildTimed(stage.target, stage.seconds);
+                    initTimed(stage.target, stage.seconds);
+                    break;
+                case 'numbers':
+                    area.innerHTML = buildNumbers();
+                    initNumbers();
+                    break;
+                case 'hold':
+                    area.innerHTML = buildHold(stage.seconds);
+                    initHold(stage.seconds);
+                    break;
             }
-            if (status) {
-                status.className = 'v-status ' + (passed ? 'correct' : 'wrong');
-                status.textContent = msg;
-            }
-            updateVerifyProgress();
         }
 
-        function updateVerifyProgress() {
-            const completed = verifyResults.filter(r => r !== null).length;
-            const total = 8;
-            document.getElementById('verifyProgress').style.width = Math.round((completed / total) * 100) + '%';
+        function verifyPass() {
+            verifyResults.push(true);
+            advanceVerify();
         }
 
-        // --- 验证1/4/7：滑块 ---
-        function createSlider(index, reverse = false, middle = false) {
-            const uid = 'slider-' + index;
-            let html = `<div class="slider-wrap" id="${uid}-wrap">
-                <div class="slider-track" id="${uid}-track"></div>
-                <div class="slider-thumb" id="${uid}-thumb">${reverse ? '◄' : '►'}</div>
-                <div class="slider-text" id="${uid}-text">${middle ? '拖到中间' : (reverse ? '拖到最左边' : '拖到最右边')}</div>
-            </div>`;
-            
+        function verifyFail(msg) {
+            verifyResults.push(false);
+            document.getElementById('verifyError').textContent = msg || '失败';
+            document.getElementById('verifyError').classList.add('show');
             setTimeout(() => {
-                const wrap = document.getElementById(uid + '-wrap');
-                const thumb = document.getElementById(uid + '-thumb');
-                const track = document.getElementById(uid + '-track');
-                const text = document.getElementById(uid + '-text');
+                advanceVerify();
+            }, 800);
+        }
+
+        function advanceVerify() {
+            document.getElementById('verifyError').classList.remove('show');
+            if (currentVerify < verifyStages.length - 1) {
+                currentVerify++;
+                loadVerifyStage();
+            } else {
+                document.getElementById('verifyProgress').style.width = '100%';
+                showFinalResult();
+            }
+        }
+
+        // --- 滑块 ---
+        function buildSlider(reverse, middle, hint) {
+            return `
+                <div class="slider-wrap" id="v-slider-wrap">
+                    <div class="slider-track" id="v-slider-track"></div>
+                    <div class="slider-thumb" id="v-slider-thumb">${reverse ? '◄' : '►'}</div>
+                    <div class="slider-text" id="v-slider-text">${hint || '拖动滑块'}</div>
+                </div>
+            `;
+        }
+
+        function initSlider(reverse, middle) {
+            setTimeout(() => {
+                const wrap = document.getElementById('v-slider-wrap');
+                const thumb = document.getElementById('v-slider-thumb');
+                const track = document.getElementById('v-slider-track');
+                const text = document.getElementById('v-slider-text');
                 if (!wrap || !thumb) return;
 
-                let dragging = false;
-                let startX, startLeft;
+                let dragging = false, startX, startLeft, done = false;
 
-                thumb.addEventListener('mousedown', (e) => {
+                function onStart(e) {
+                    if (done) return;
                     dragging = true;
-                    startX = e.clientX;
+                    startX = e.touches ? e.touches[0].clientX : e.clientX;
                     startLeft = thumb.offsetLeft;
-                    thumb.style.cursor = 'grabbing';
-                    e.preventDefault();
-                });
+                }
 
-                document.addEventListener('mousemove', (e) => {
-                    if (!dragging) return;
+                function onMove(e) {
+                    if (!dragging || done) return;
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                     const wrapRect = wrap.getBoundingClientRect();
                     const maxLeft = wrapRect.width - 40;
-                    let newLeft = startLeft + (e.clientX - startX);
+                    let newLeft = startLeft + (clientX - startX);
                     newLeft = Math.max(0, Math.min(maxLeft, newLeft));
                     thumb.style.left = newLeft + 'px';
                     const pct = Math.round((newLeft / maxLeft) * 100);
                     track.style.width = pct + '%';
                     text.textContent = pct + '%';
-                });
+                }
 
-                document.addEventListener('mouseup', () => {
-                    if (!dragging) return;
+                function onEnd() {
+                    if (!dragging || done) return;
                     dragging = false;
-                    thumb.style.cursor = 'grab';
                     const maxLeft = wrap.getBoundingClientRect().width - 40;
                     const pct = Math.round((thumb.offsetLeft / maxLeft) * 100);
 
                     if (middle) {
-                        // 验证7：必须在 45-55% 之间
                         if (pct >= 45 && pct <= 55) {
-                            updateVerifyStatus(index, true, '精确！停在正中间');
+                            done = true;
+                            verifyPass();
                         } else {
-                            updateVerifyStatus(index, false, `偏了（${pct}%），请重试`);
-                            // 重置
-                            thumb.style.left = '0px';
-                            track.style.width = '0%';
-                            text.textContent = '拖到中间';
+                            verifyFail(`偏了（${pct}%），需要在 45%-55% 之间`);
                         }
                     } else if (reverse) {
-                        // 验证4：拖到最左边（0%）
                         if (pct <= 5) {
-                            updateVerifyStatus(index, true, '完成');
+                            done = true;
+                            verifyPass();
                         } else {
-                            updateVerifyStatus(index, false, '还没到最左边，重试');
-                            thumb.style.left = '0px';
-                            track.style.width = '0%';
-                            text.textContent = '拖到最左边';
+                            verifyFail('没拖到最左边');
                         }
                     } else {
-                        // 验证1：拖到最右边（100%）
                         if (pct >= 95) {
-                            updateVerifyStatus(index, true, '完成');
+                            done = true;
+                            verifyPass();
                         } else {
-                            updateVerifyStatus(index, false, '还没到最右边，重试');
-                            thumb.style.left = '0px';
-                            track.style.width = '0%';
-                            text.textContent = '拖到最右边';
+                            verifyFail('没拖到最右边');
                         }
                     }
-                });
+                }
 
-                // 触摸事件
-                thumb.addEventListener('touchstart', (e) => {
-                    dragging = true;
-                    startX = e.touches[0].clientX;
-                    startLeft = thumb.offsetLeft;
-                    e.preventDefault();
-                });
-                document.addEventListener('touchmove', (e) => {
-                    if (!dragging) return;
-                    const wrapRect = wrap.getBoundingClientRect();
-                    const maxLeft = wrapRect.width - 40;
-                    let newLeft = startLeft + (e.touches[0].clientX - startX);
-                    newLeft = Math.max(0, Math.min(maxLeft, newLeft));
-                    thumb.style.left = newLeft + 'px';
-                    const pct = Math.round((newLeft / maxLeft) * 100);
-                    track.style.width = pct + '%';
-                    text.textContent = pct + '%';
-                });
-                document.addEventListener('touchend', () => {
-                    if (!dragging) return;
-                    dragging = false;
-                    const maxLeft = wrap.getBoundingClientRect().width - 40;
-                    const pct = Math.round((thumb.offsetLeft / maxLeft) * 100);
-                    if (middle) {
-                        if (pct >= 45 && pct <= 55) {
-                            updateVerifyStatus(index, true, '精确！停在正中间');
-                        } else {
-                            updateVerifyStatus(index, false, `偏了（${pct}%），请重试`);
-                            thumb.style.left = '0px';
-                            track.style.width = '0%';
-                            text.textContent = '拖到中间';
-                        }
-                    } else if (reverse) {
-                        if (pct <= 5) {
-                            updateVerifyStatus(index, true, '完成');
-                        } else {
-                            updateVerifyStatus(index, false, '还没到最左边，重试');
-                            thumb.style.left = '0px';
-                            track.style.width = '0%';
-                            text.textContent = '拖到最左边';
-                        }
-                    } else {
-                        if (pct >= 95) {
-                            updateVerifyStatus(index, true, '完成');
-                        } else {
-                            updateVerifyStatus(index, false, '还没到最右边，重试');
-                            thumb.style.left = '0px';
-                            track.style.width = '0%';
-                            text.textContent = '拖到最右边';
-                        }
-                    }
-                });
+                thumb.addEventListener('mousedown', onStart);
+                thumb.addEventListener('touchstart', (e) => { e.preventDefault(); onStart(e); });
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('touchmove', onMove, { passive: false });
+                document.addEventListener('mouseup', onEnd);
+                document.addEventListener('touchend', onEnd);
             }, 100);
-
-            return html;
         }
 
-        // --- 验证2：连续点击 ---
-        function createClickCounter(index, target) {
-            const uid = 'clicker-' + index;
-            let html = `
-                <div class="click-target" id="${uid}-btn">👆</div>
-                <div class="click-counter" id="${uid}-counter">0 / ${target}</div>
+        // --- 点击计数 ---
+        function buildClicker(target) {
+            return `
+                <div class="click-target" id="v-clicker-btn">👆</div>
+                <div class="click-counter" id="v-clicker-counter">0 / ${target}</div>
             `;
+        }
+
+        function initClicker(target) {
             setTimeout(() => {
-                let count = 0;
-                const btn = document.getElementById(uid + '-btn');
-                const counter = document.getElementById(uid + '-counter');
+                let count = 0, done = false;
+                const btn = document.getElementById('v-clicker-btn');
+                const counter = document.getElementById('v-clicker-counter');
                 if (!btn) return;
                 btn.addEventListener('click', () => {
-                    if (verifyResults[index] !== null) return;
+                    if (done) return;
                     count++;
                     counter.textContent = count + ' / ' + target;
                     if (count >= target) {
-                        updateVerifyStatus(index, true, '完成');
-                        btn.style.opacity = '0.5';
+                        done = true;
+                        verifyPass();
                     }
                 });
             }, 100);
-            return html;
         }
 
-        // --- 验证3：颜色拼图 ---
-        function createColorPuzzle(index) {
-            const uid = 'puzzle-' + index;
-            const baseColor = [60, 60, 70];
-            const oddColor = [60, 65, 70]; // 略微不同
-            const oddIndex = Math.floor(Math.random() * 16);
-            let html = '<div class="puzzle-grid" id="' + uid + '">';
-            for (let i = 0; i < 16; i++) {
-                const isOdd = i === oddIndex;
-                const r = isOdd ? oddColor[0] : baseColor[0];
-                const g = isOdd ? oddColor[1] : baseColor[1];
-                const b = isOdd ? oddColor[2] : baseColor[2];
-                html += `<div class="puzzle-cell" data-index="${i}" style="background:rgb(${r},${g},${b});" onclick="handlePuzzleClick(${index}, ${i}, ${oddIndex}, this)"></div>`;
-            }
-            html += '</div>';
-            return html;
+        // --- 颜色拼图 ---
+        function buildPuzzle() {
+            return '<div class="puzzle-grid" id="v-puzzle-grid"></div>';
         }
 
-        function handlePuzzleClick(verifyIndex, clickedIndex, oddIndex, el) {
-            if (verifyResults[verifyIndex] !== null) return;
-            if (clickedIndex === oddIndex) {
-                el.classList.add('clicked');
-                updateVerifyStatus(verifyIndex, true, '找到了！眼力不错');
-            } else {
-                updateVerifyStatus(verifyIndex, false, '找错了，再试试');
-                // 重置所有
-                document.querySelectorAll('#verify-item-' + verifyIndex + ' .puzzle-cell').forEach(c => c.classList.remove('clicked'));
-            }
-        }
-
-        // --- 验证5：10秒50次 ---
-        function createTimedClicker(index, target, seconds) {
-            const uid = 'timed-' + index;
-            let html = `
-                <div class="click-target" id="${uid}-btn">⏱️</div>
-                <div class="click-counter" id="${uid}-counter">0 / ${target}</div>
-                <div class="click-counter" id="${uid}-timer" style="color:#fbbf24;">剩余 ${seconds} 秒</div>
-            `;
+        function initPuzzle() {
             setTimeout(() => {
-                let count = 0;
-                let remaining = seconds;
-                let started = false;
-                let timerInterval;
-                const btn = document.getElementById(uid + '-btn');
-                const counter = document.getElementById(uid + '-counter');
-                const timerEl = document.getElementById(uid + '-timer');
+                const grid = document.getElementById('v-puzzle-grid');
+                if (!grid) return;
+                const baseColor = [60, 60, 70];
+                const oddColor = [60, 66, 70];
+                const oddIndex = Math.floor(Math.random() * 16);
+                let done = false;
+                grid.innerHTML = '';
+                for (let i = 0; i < 16; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'puzzle-cell';
+                    const isOdd = i === oddIndex;
+                    cell.style.background = `rgb(${isOdd ? oddColor[0] : baseColor[0]}, ${isOdd ? oddColor[1] : baseColor[1]}, ${isOdd ? oddColor[2] : baseColor[2]})`;
+                    cell.addEventListener('click', () => {
+                        if (done) return;
+                        if (i === oddIndex) {
+                            done = true;
+                            cell.classList.add('done');
+                            verifyPass();
+                        } else {
+                            verifyFail('找错了');
+                        }
+                    });
+                    grid.appendChild(cell);
+                }
+            }, 100);
+        }
+
+        // --- 计时点击 ---
+        function buildTimed(target, seconds) {
+            return `
+                <div class="click-target" id="v-timed-btn">⏱️</div>
+                <div class="click-counter" id="v-timed-counter">0 / ${target}</div>
+                <div class="click-counter" id="v-timed-timer" style="color:#fbbf24;">剩余 ${seconds} 秒</div>
+            `;
+        }
+
+        function initTimed(target, seconds) {
+            setTimeout(() => {
+                let count = 0, remaining = seconds, started = false, done = false, timerInterval;
+                const btn = document.getElementById('v-timed-btn');
+                const counter = document.getElementById('v-timed-counter');
+                const timerEl = document.getElementById('v-timed-timer');
                 if (!btn) return;
 
                 btn.addEventListener('click', () => {
-                    if (verifyResults[index] !== null) return;
+                    if (done) return;
                     if (!started) {
                         started = true;
                         timerInterval = setInterval(() => {
@@ -948,171 +848,128 @@
                             if (remaining <= 2) timerEl.style.color = '#ef4444';
                             if (remaining <= 0) {
                                 clearInterval(timerInterval);
-                                if (count >= target) {
-                                    updateVerifyStatus(index, true, '手速惊人！');
-                                } else {
-                                    updateVerifyStatus(index, false, `时间到！只点了 ${count} 次`);
+                                if (!done) {
+                                    done = true;
+                                    if (count >= target) {
+                                        verifyPass();
+                                    } else {
+                                        verifyFail(`时间到！只点了 ${count} 次`);
+                                    }
                                 }
-                                btn.style.opacity = '0.5';
                             }
                         }, 1000);
                     }
                     count++;
                     counter.textContent = count + ' / ' + target;
-                    if (count >= target && remaining > 0) {
+                    if (count >= target && remaining > 0 && !done) {
+                        done = true;
                         clearInterval(timerInterval);
-                        updateVerifyStatus(index, true, '手速惊人！');
-                        btn.style.opacity = '0.5';
+                        verifyPass();
                     }
                 });
             }, 100);
-            return html;
         }
 
-        // --- 验证6：按顺序点数字 ---
-        function createNumberGrid(index) {
-            const uid = 'numgrid-' + index;
-            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-            // 随机排列
-            for (let i = numbers.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
-            }
-            let html = '<div class="puzzle-grid" id="' + uid + '">';
-            numbers.forEach(n => {
-                html += `<div class="puzzle-cell num-cell" data-num="${n}" id="${uid}-cell-${n}">${n}</div>`;
-            });
-            html += '</div>';
+        // --- 数字排序 ---
+        function buildNumbers() {
+            return '<div class="puzzle-grid" id="v-num-grid"></div>';
+        }
+
+        function initNumbers() {
             setTimeout(() => {
-                let nextExpected = 1;
-                document.querySelectorAll('#' + uid + ' .num-cell').forEach(cell => {
+                const grid = document.getElementById('v-num-grid');
+                if (!grid) return;
+                const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                for (let i = nums.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [nums[i], nums[j]] = [nums[j], nums[i]];
+                }
+                let next = 1, done = false;
+                grid.innerHTML = '';
+                nums.forEach(n => {
+                    const cell = document.createElement('div');
+                    cell.className = 'puzzle-cell';
+                    cell.textContent = n;
+                    cell.id = 'v-num-' + n;
                     cell.addEventListener('click', () => {
-                        if (verifyResults[index] !== null) return;
-                        const num = parseInt(cell.dataset.num);
-                        if (num === nextExpected) {
-                            cell.classList.add('clicked');
-                            cell.style.opacity = '0.5';
-                            nextExpected++;
-                            if (nextExpected > 9) {
-                                updateVerifyStatus(index, true, '顺序正确！');
+                        if (done) return;
+                        if (n === next) {
+                            cell.classList.add('done');
+                            next++;
+                            if (next > 9) {
+                                done = true;
+                                verifyPass();
                             }
                         } else {
-                            updateVerifyStatus(index, false, '顺序错了！从 ' + nextExpected + ' 开始');
-                            // 重置
-                            nextExpected = 1;
-                            document.querySelectorAll('#' + uid + ' .num-cell').forEach(c => {
-                                c.classList.remove('clicked');
-                                c.style.opacity = '1';
-                            });
+                            verifyFail(`顺序错了！应该点 ${next}`);
                         }
                     });
+                    grid.appendChild(cell);
                 });
             }, 100);
-            return html;
         }
 
-        // --- 验证8：按住3秒 ---
-        function createHoldButton(index, seconds) {
-            const uid = 'hold-' + index;
-            let html = `
-                <div class="click-target" id="${uid}-btn" style="user-select:none;">长按这里</div>
-                <div class="click-counter" id="${uid}-timer">保持按住 ${seconds} 秒</div>
+        // --- 长按 ---
+        function buildHold(seconds) {
+            return `
+                <div class="click-target" id="v-hold-btn" style="user-select:none;">长按这里</div>
+                <div class="click-counter" id="v-hold-timer">保持按住 ${seconds} 秒</div>
                 <div style="width:100%;height:4px;background:#1a1a1a;border-radius:2px;margin-top:8px;overflow:hidden;">
-                    <div id="${uid}-bar" style="height:100%;background:#4ade80;width:0%;transition:width 0.1s;"></div>
+                    <div id="v-hold-bar" style="height:100%;background:#4ade80;width:0%;transition:width 0.1s;"></div>
                 </div>
             `;
-            setTimeout(() => {
-                const btn = document.getElementById(uid + '-btn');
-                const timerEl = document.getElementById(uid + '-timer');
-                const bar = document.getElementById(uid + '-bar');
-                if (!btn) return;
-                let holdStart;
-                let holdInterval;
-                let succeeded = false;
-
-                btn.addEventListener('mousedown', () => {
-                    if (verifyResults[index] !== null) return;
-                    holdStart = Date.now();
-                    succeeded = false;
-                    holdInterval = setInterval(() => {
-                        const elapsed = (Date.now() - holdStart) / 1000;
-                        const pct = Math.min(100, (elapsed / seconds) * 100);
-                        bar.style.width = pct + '%';
-                        timerEl.textContent = '已按住 ' + elapsed.toFixed(1) + ' 秒';
-                        if (elapsed >= seconds && !succeeded) {
-                            succeeded = true;
-                            clearInterval(holdInterval);
-                            updateVerifyStatus(index, true, '耐力不错！');
-                            bar.style.width = '100%';
-                            bar.style.background = '#4ade80';
-                        }
-                    }, 100);
-                });
-
-                btn.addEventListener('mouseup', () => {
-                    clearInterval(holdInterval);
-                    if (!succeeded && verifyResults[index] === null) {
-                        updateVerifyStatus(index, false, '松手太早了！请按住 ' + seconds + ' 秒');
-                        bar.style.width = '0%';
-                        timerEl.textContent = '保持按住 ' + seconds + ' 秒';
-                    }
-                });
-
-                btn.addEventListener('mouseleave', () => {
-                    clearInterval(holdInterval);
-                    if (!succeeded && verifyResults[index] === null && holdStart) {
-                        updateVerifyStatus(index, false, '手指离开了！请按住 ' + seconds + ' 秒');
-                        bar.style.width = '0%';
-                        timerEl.textContent = '保持按住 ' + seconds + ' 秒';
-                        holdStart = null;
-                    }
-                });
-
-                // 触摸事件
-                btn.addEventListener('touchstart', (e) => {
-                    e.preventDefault();
-                    if (verifyResults[index] !== null) return;
-                    holdStart = Date.now();
-                    succeeded = false;
-                    holdInterval = setInterval(() => {
-                        const elapsed = (Date.now() - holdStart) / 1000;
-                        const pct = Math.min(100, (elapsed / seconds) * 100);
-                        bar.style.width = pct + '%';
-                        timerEl.textContent = '已按住 ' + elapsed.toFixed(1) + ' 秒';
-                        if (elapsed >= seconds && !succeeded) {
-                            succeeded = true;
-                            clearInterval(holdInterval);
-                            updateVerifyStatus(index, true, '耐力不错！');
-                            bar.style.width = '100%';
-                        }
-                    }, 100);
-                });
-
-                btn.addEventListener('touchend', () => {
-                    clearInterval(holdInterval);
-                    if (!succeeded && verifyResults[index] === null) {
-                        updateVerifyStatus(index, false, '松手太早了！请按住 ' + seconds + ' 秒');
-                        bar.style.width = '0%';
-                        timerEl.textContent = '保持按住 ' + seconds + ' 秒';
-                    }
-                });
-            }, 100);
-            return html;
         }
 
-        // ============ 提交验证 ============
-        function submitVerification() {
-            if (verifyResults.some(r => r === null)) {
-                document.getElementById('verifyError').textContent = '还有未完成的验证项';
-                document.getElementById('verifyError').classList.add('show');
-                return;
-            }
+        function initHold(seconds) {
+            setTimeout(() => {
+                const btn = document.getElementById('v-hold-btn');
+                const timerEl = document.getElementById('v-hold-timer');
+                const bar = document.getElementById('v-hold-bar');
+                if (!btn) return;
+                let holdStart, holdInterval, done = false, succeeded = false;
 
+                function onStart(e) {
+                    e.preventDefault();
+                    if (done) return;
+                    holdStart = Date.now();
+                    succeeded = false;
+                    holdInterval = setInterval(() => {
+                        const elapsed = (Date.now() - holdStart) / 1000;
+                        const pct = Math.min(100, (elapsed / seconds) * 100);
+                        bar.style.width = pct + '%';
+                        timerEl.textContent = '已按住 ' + elapsed.toFixed(1) + ' 秒';
+                        if (elapsed >= seconds && !succeeded) {
+                            succeeded = true;
+                            done = true;
+                            clearInterval(holdInterval);
+                            verifyPass();
+                        }
+                    }, 100);
+                }
+
+                function onEnd() {
+                    clearInterval(holdInterval);
+                    if (!done && !succeeded) {
+                        verifyFail('松手太早了！请按住 ' + seconds + ' 秒');
+                        bar.style.width = '0%';
+                        timerEl.textContent = '保持按住 ' + seconds + ' 秒';
+                    }
+                }
+
+                btn.addEventListener('mousedown', onStart);
+                btn.addEventListener('touchstart', onStart);
+                btn.addEventListener('mouseup', onEnd);
+                btn.addEventListener('mouseleave', onEnd);
+                btn.addEventListener('touchend', onEnd);
+            }, 100);
+        }
+
+        // ============ 结果 ============
+        function showFinalResult() {
             const correctCount = verifyResults.filter(r => r === true).length;
-            const total = 8;
+            const total = verifyStages.length;
 
-            let iqScore;
-            let comment;
+            let iqScore, comment;
 
             if (correctCount === total) {
                 iqScore = '0';
