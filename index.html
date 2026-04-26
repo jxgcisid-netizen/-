@@ -502,7 +502,7 @@
         let selectedOption = -1;
         let quizAnswers = [];
         let currentVerify = 0;
-        let verifyResults = []; // true/false
+        let verifyResults = [];
 
         // ============ 屏幕切换 ============
         function goScreen(name) {
@@ -890,7 +890,6 @@
                     const cell = document.createElement('div');
                     cell.className = 'puzzle-cell';
                     cell.textContent = n;
-                    cell.id = 'v-num-' + n;
                     cell.addEventListener('click', () => {
                         if (done) return;
                         if (n === next) {
@@ -964,38 +963,36 @@
             }, 100);
         }
 
-       // ============ 结果 ============
-function showFinalResult() {
-    const correctCount = verifyResults.filter(r => r === true).length;
-    const total = verifyStages.length;
+        // ============ 结果 ============
+        function showFinalResult() {
+            const correctCount = verifyResults.filter(r => r === true).length;
+            const total = verifyStages.length;
 
-    let iqScore, comment;
+            let iqScore, comment;
 
-    if (correctCount === total) {
-        const insults = [
-            "全部通过？说明你完美符合本测试的目标人群。<br>智商：0，因为认真做完这套题的人脑子多少有点问题。",
-            "居然全对？你是一题一题认真做的吧。<br>正常人看到第三题就关网页了，你还做到最后。<br>智商：0。",
-            "恭喜全对。你知道这套题的设计初衷是什么吗？<br>筛选出会认真做完的傻子。<br>智商：0。",
-        ];
-        iqScore = '0';
-        comment = insults[Math.floor(Math.random() * insults.length)];
-    } else {
-        const wrongCount = total - correctCount;
-        const insults = [
-            `${wrongCount} 项没通过。连这种测试都过不了，你是怎么活到现在的？<br>智商：-${wrongCount * 50 + Math.floor(Math.random() * 50)}`,
-            `错了 ${wrongCount} 个。你知道吗，瞎蒙的正确率都比你这个高。<br>智商：-${wrongCount * 50 + Math.floor(Math.random() * 50)}`,
-            `${wrongCount} 项失败。建议把网线拔了，远离互联网。<br>智商：-${wrongCount * 50 + Math.floor(Math.random() * 50)}`,
-        ];
-        const rng = Math.floor(Math.random() * insults.length);
-        iqScore = `-${wrongCount * 50 + Math.floor(Math.random() * 50)}`;
-        comment = insults[rng];
-    }
+            if (correctCount === total) {
+                const insults = [
+                    "全部通过？说明你完美符合本测试的目标人群。<br>智商：0，因为认真做完这套题的人脑子多少有点问题。",
+                    "居然全对？你是一题一题认真做的吧。<br>正常人看到第三题就关网页了，你还做到最后。<br>智商：0。",
+                    "恭喜全对。你知道这套题的设计初衷是什么吗？<br>筛选出会认真做完的傻子。<br>智商：0。",
+                ];
+                iqScore = '0';
+                comment = insults[Math.floor(Math.random() * insults.length)];
+            } else {
+                const wrongCount = total - correctCount;
+                const insults = [
+                    `${wrongCount} 项没通过。连这种测试都过不了，你是怎么活到现在的？<br>智商：-${wrongCount * 50 + Math.floor(Math.random() * 50)}`,
+                    `错了 ${wrongCount} 个。你知道吗，瞎蒙的正确率都比你这个高。<br>智商：-${wrongCount * 50 + Math.floor(Math.random() * 50)}`,
+                    `${wrongCount} 项失败。建议把网线拔了，远离互联网。<br>智商：-${wrongCount * 50 + Math.floor(Math.random() * 50)}`,
+                ];
+                iqScore = `-${wrongCount * 50 + Math.floor(Math.random() * 50)}`;
+                comment = insults[Math.floor(Math.random() * insults.length)];
+            }
 
-    document.getElementById('iqScore').textContent = iqScore;
-    document.getElementById('iqScore').className = 'score-display score-negative';
-    document.getElementById('iqComment').innerHTML = comment;
-    goScreen('final');
-}
+            document.getElementById('iqScore').textContent = iqScore;
+            document.getElementById('iqScore').className = 'score-display score-negative';
+            document.getElementById('iqComment').innerHTML = comment;
+            goScreen('final');
         }
     </script>
 
