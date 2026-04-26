@@ -3,174 +3,450 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>重要系统更新</title>
+    <title>安全验证</title>
     <style>
-        body {
-            font-family: 'Microsoft YaHei', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+        :root {
+            --bg: #0f0f0f;
+            --card: #1a1a1a;
+            --border: #2a2a2a;
+            --text: #e0e0e0;
+            --dim: #888;
+            --accent: #4ade80;
+            --danger: #ef4444;
+        }
+
+        * {
             margin: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0;
+            box-sizing: border-box;
         }
-        .container {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 18px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            margin: 10px;
-        }
-        button:hover {
-            transform: scale(1.05);
-        }
-        .captcha-box {
-            background: #f0f0f0;
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            font-style: italic;
-            color: #666;
         }
-        .hidden {
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px 32px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--dim);
+            font-size: 14px;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #fff;
+            color: #000;
+        }
+        .btn-primary:hover {
+            background: #e5e5e5;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--dim);
+            border: 1px solid var(--border);
+            margin-top: 8px;
+        }
+        .btn-ghost:hover {
+            border-color: #555;
+            color: #ccc;
+        }
+
+        /* 人机验证 */
+        .captcha-display {
+            background: #111;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 24px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 12px;
+            user-select: none;
+            color: #fff;
+            position: relative;
+        }
+
+        .captcha-display::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(255,255,255,0.01) 2px,
+                rgba(255,255,255,0.01) 4px
+            );
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            background: #111;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            text-align: center;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .input-field:focus {
+            border-color: #555;
+        }
+        .input-field::placeholder {
+            color: #444;
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 13px;
+            margin-top: 8px;
             display: none;
         }
-        input[type="text"] {
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            width: 200px;
-            text-align: center;
+        .error-msg.show {
+            display: block;
+        }
+
+        .hint {
+            color: var(--dim);
+            font-size: 12px;
+            margin-top: 12px;
+        }
+
+        /* 确认卡片堆叠 */
+        .confirm-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .confirm-item {
+            background: #141414;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .confirm-item .check-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 1px solid #444;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .confirm-item .check-dot.checked {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #000;
+            font-size: 12px;
+        }
+
+        .confirm-item .label {
+            color: #ccc;
+            font-size: 13px;
+        }
+
+        /* 进度条 */
+        .progress-wrap {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 20px 0 24px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width 0.3s;
+        }
+
+        /* 加载动画 */
+        .loading-dots {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin: 16px 0;
+        }
+        .loading-dots span {
+            width: 8px;
+            height: 8px;
+            background: #555;
+            border-radius: 50%;
+            animation: bounce 1.2s infinite;
+        }
+        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
 <body>
-    <div class="container" id="mainContainer">
-        <h2>🔐 系统重要更新</h2>
-        <p>请验证您的身份以继续</p>
-        <button onclick="startProcess()">进入系统</button>
+
+    <!-- ==================== 第一屏：入口 ==================== -->
+    <div class="card" id="screen-intro">
+        <div class="icon">🔐</div>
+        <h2>安全验证</h2>
+        <p class="subtitle">此页面需要验证您的身份后才能继续访问。<br>请点击下方按钮开始验证流程。</p>
+        <button class="btn btn-primary" onclick="goScreen('captcha')">开始验证</button>
     </div>
 
-    <div class="container hidden" id="verifyContainer">
-        <h2>🤖 人机验证</h2>
-        <p>请证明您不是机器人</p>
-        <div class="captcha-box">
-            <p>请输入下方验证码：</p>
-            <p style="font-size: 28px; font-weight: bold; letter-spacing: 8px; 
-                      background: white; padding: 15px; user-select: none;
-                      border: 2px dashed #764ba2; display: inline-block;
-                      font-family: 'Courier New', monospace;">
-                EZEZ
-            </p>
-            <br><br>
-            <input type="text" id="captchaInput" placeholder="输入验证码" maxlength="4">
-            <br><br>
-            <button onclick="verifyCaptcha()">验证</button>
-            <p style="font-size: 12px; color: #999; margin-top: 10px;">
-                提示：不区分大小写
-            </p>
+    <!-- ==================== 第二屏：人机验证 ==================== -->
+    <div class="card" id="screen-captcha" style="display:none;">
+        <div class="icon">🤖</div>
+        <h2>人机验证</h2>
+        <p class="subtitle">请输入下方显示的验证码，证明您不是机器人</p>
+
+        <div class="captcha-display">EZEZ</div>
+
+        <input type="text" class="input-field" id="captchaInput" placeholder="输入验证码" maxlength="4" autocomplete="off">
+        <p class="error-msg" id="captchaError">验证码不正确，请重试</p>
+        <p class="hint">不区分大小写 · 看清楚再填</p>
+
+        <div style="margin-top: 24px;">
+            <button class="btn btn-primary" onclick="checkCaptcha()">确认</button>
+            <button class="btn btn-ghost" onclick="goScreen('intro')">返回</button>
         </div>
     </div>
 
+    <!-- ==================== 第三屏：多重确认 ==================== -->
+    <div class="card" id="screen-confirm" style="display:none;">
+        <div class="icon">⚠️</div>
+        <h2 id="confirmTitle">确认操作</h2>
+        <p class="subtitle" id="confirmDesc">请勾选以下所有确认项以继续</p>
+
+        <div class="progress-wrap">
+            <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+        </div>
+
+        <div class="confirm-stack" id="confirmStack"></div>
+
+        <p class="error-msg" id="confirmError">请勾选所有确认项</p>
+
+        <div style="margin-top: 16px;">
+            <button class="btn btn-primary" id="btnConfirmNext" onclick="handleConfirmNext()">继续</button>
+            <button class="btn btn-ghost" onclick="resetAll()">取消</button>
+        </div>
+    </div>
+
+    <!-- ==================== 第四屏：加载跳转 ==================== -->
+    <div class="card" id="screen-loading" style="display:none;">
+        <div class="icon">✅</div>
+        <h2>验证通过</h2>
+        <p class="subtitle">正在为您加载内容...</p>
+        <div class="loading-dots">
+            <span></span><span></span><span></span>
+        </div>
+        <p style="color: #555; font-size: 12px; margin-top: 8px;">即将跳转</p>
+    </div>
+
     <script>
-        let step = 0;
-        const confirmMessages = [
-            "您确定要继续吗？",
-            "真的确定吗？这个操作不可撤销！",
-            "最后一次确认...您想清楚了吗？",
-            "系统怀疑您可能不是人类，请再次确认",
-            "警告：继续操作可能需要承担相应责任！",
-            "最终确认：您是否愿意承担所有后果？"
+        // ============ 确认项配置 ============
+        const confirmSteps = [
+            { label: '我确认要访问此页面', weight: 1 },
+            { label: '我知道自己在做什么', weight: 1 },
+            { label: '我愿意承担一切后果', weight: 1 },
+            { label: '我不是误点进来的', weight: 1 },
+            { label: '我准备好面对接下来的内容', weight: 1 },
+            { label: '以上所有选项我都是认真勾选的，不是随便点的', weight: 1 },
         ];
 
-        function startProcess() {
-            if (confirm("欢迎来到系统更新页面\n\n请确认您已阅读并同意服务条款")) {
-                document.getElementById('mainContainer').classList.add('hidden');
-                document.getElementById('verifyContainer').classList.remove('hidden');
-            }
-        }
+        let currentStep = 0;
+        const stepsPerPage = 3; // 每页显示几个确认项
 
-        function verifyCaptcha() {
-            const input = document.getElementById('captchaInput').value.trim();
-            if (input.toUpperCase() === 'EZEZ') {
-                document.getElementById('verifyContainer').classList.add('hidden');
-                showConfirms();
-            } else {
-                alert('验证码错误！\n\n💡 提示：就是字面意思 "EZEZ"（easy easy）');
-                document.getElementById('captchaInput').value = '';
-            }
-        }
-
-        // 支持回车键提交验证码
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('captchaInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    verifyCaptcha();
-                }
+        // ============ 屏幕切换 ============
+        function goScreen(name) {
+            ['intro', 'captcha', 'confirm', 'loading'].forEach(id => {
+                document.getElementById('screen-' + id).style.display = 'none';
             });
+            const target = document.getElementById('screen-' + name);
+            if (target) target.style.display = 'block';
+
+            if (name === 'confirm') {
+                currentStep = 0;
+                renderConfirmBatch();
+            }
+        }
+
+        // ============ 人机验证 ============
+        function checkCaptcha() {
+            const input = document.getElementById('captchaInput').value.trim();
+            const errorEl = document.getElementById('captchaError');
+
+            if (input.toUpperCase() === 'EZEZ') {
+                errorEl.classList.remove('show');
+                document.getElementById('captchaInput').value = '';
+                goScreen('confirm');
+            } else {
+                errorEl.classList.add('show');
+                document.getElementById('captchaInput').value = '';
+                document.getElementById('captchaInput').focus();
+            }
+        }
+
+        // 回车提交
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('captchaInput');
+            if (input) {
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') checkCaptcha();
+                });
+            }
         });
 
-        function showConfirms() {
-            if (step < confirmMessages.length) {
-                if (confirm(confirmMessages[step])) {
-                    step++;
-                    showConfirms();
-                } else {
-                    alert('操作已取消');
-                    step = 0;
-                    document.getElementById('mainContainer').classList.remove('hidden');
-                }
+        // ============ 确认流程 ============
+        function renderConfirmBatch() {
+            const stack = document.getElementById('confirmStack');
+            const title = document.getElementById('confirmTitle');
+            const desc = document.getElementById('confirmDesc');
+            const errorEl = document.getElementById('confirmError');
+            const btn = document.getElementById('btnConfirmNext');
+            const progressBar = document.getElementById('progressBar');
+
+            errorEl.classList.remove('show');
+
+            const start = currentStep;
+            const end = Math.min(currentStep + stepsPerPage, confirmSteps.length);
+            const batch = confirmSteps.slice(start, end);
+
+            // 更新标题
+            if (currentStep === 0) {
+                title.textContent = '安全确认';
+                desc.textContent = '请勾选以下确认项以继续';
             } else {
-                startRickroll();
+                title.textContent = '再次确认';
+                desc.textContent = '还需要确认以下内容';
+            }
+
+            // 更新进度条
+            const progress = Math.round((currentStep / confirmSteps.length) * 100);
+            progressBar.style.width = progress + '%';
+
+            // 渲染确认项
+            stack.innerHTML = '';
+            batch.forEach((item, i) => {
+                const div = document.createElement('div');
+                div.className = 'confirm-item';
+                div.innerHTML = `
+                    <div class="check-dot" data-index="${start + i}" onclick="toggleCheck(this)"></div>
+                    <span class="label">${item.label}</span>
+                `;
+                stack.appendChild(div);
+            });
+
+            // 按钮文字
+            if (end >= confirmSteps.length) {
+                btn.textContent = '完成验证';
+            } else {
+                btn.textContent = '继续';
             }
         }
 
-        function startRickroll() {
-            // 创建全屏遮盖
-            const overlay = document.createElement('div');
-            overlay.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: black;
-                z-index: 9999;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                color: white;
-                font-size: 24px;
-            `;
-            overlay.innerHTML = `
-                <p>✅ 验证通过！</p>
-                <p>正在加载重要更新...</p>
-                <div style="margin-top: 20px; font-size: 14px; color: #999;">
-                    即将为您跳转...
-                </div>
-            `;
-            document.body.appendChild(overlay);
+        function toggleCheck(dot) {
+            dot.classList.toggle('checked');
+            dot.textContent = dot.classList.contains('checked') ? '✓' : '';
+        }
 
-            // 3秒后跳转到 Rickroll
-            setTimeout(() => {
-                window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-            }, 3000);
+        function handleConfirmNext() {
+            const start = currentStep;
+            const end = Math.min(currentStep + stepsPerPage, confirmSteps.length);
+            const errorEl = document.getElementById('confirmError');
+
+            // 检查当前页所有项是否都勾选
+            const allChecked = [];
+            for (let i = start; i < end; i++) {
+                const dot = document.querySelector(`.check-dot[data-index="${i}"]`);
+                allChecked.push(dot && dot.classList.contains('checked'));
+            }
+
+            if (allChecked.every(Boolean)) {
+                errorEl.classList.remove('show');
+
+                if (end >= confirmSteps.length) {
+                    // 全部完成
+                    goScreen('loading');
+                    setTimeout(() => {
+                        window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+                    }, 2500);
+                } else {
+                    // 下一批
+                    currentStep = end;
+                    renderConfirmBatch();
+                }
+            } else {
+                errorEl.classList.add('show');
+                document.getElementById('confirmError').textContent = '还有未勾选的项，请全部勾选后再继续';
+            }
+        }
+
+        // ============ 重置 ============
+        function resetAll() {
+            currentStep = 0;
+            goScreen('intro');
         }
     </script>
+
 </body>
 </html>
