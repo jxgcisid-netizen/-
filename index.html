@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>重要系统更新</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin: 10px;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        .captcha-box {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #666;
+        }
+        .hidden {
+            display: none;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 200px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="mainContainer">
+        <h2>🔐 系统重要更新</h2>
+        <p>请验证您的身份以继续</p>
+        <button onclick="startProcess()">进入系统</button>
+    </div>
+
+    <div class="container hidden" id="verifyContainer">
+        <h2>🤖 人机验证</h2>
+        <p>请证明您不是机器人</p>
+        <div class="captcha-box">
+            <p>请输入下方验证码：</p>
+            <p style="font-size: 28px; font-weight: bold; letter-spacing: 8px; 
+                      background: white; padding: 15px; user-select: none;
+                      border: 2px dashed #764ba2; display: inline-block;
+                      font-family: 'Courier New', monospace;">
+                EZEZ
+            </p>
+            <br><br>
+            <input type="text" id="captchaInput" placeholder="输入验证码" maxlength="4">
+            <br><br>
+            <button onclick="verifyCaptcha()">验证</button>
+            <p style="font-size: 12px; color: #999; margin-top: 10px;">
+                提示：不区分大小写
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let step = 0;
+        const confirmMessages = [
+            "您确定要继续吗？",
+            "真的确定吗？这个操作不可撤销！",
+            "最后一次确认...您想清楚了吗？",
+            "系统怀疑您可能不是人类，请再次确认",
+            "警告：继续操作可能需要承担相应责任！",
+            "最终确认：您是否愿意承担所有后果？"
+        ];
+
+        function startProcess() {
+            if (confirm("欢迎来到系统更新页面\n\n请确认您已阅读并同意服务条款")) {
+                document.getElementById('mainContainer').classList.add('hidden');
+                document.getElementById('verifyContainer').classList.remove('hidden');
+            }
+        }
+
+        function verifyCaptcha() {
+            const input = document.getElementById('captchaInput').value.trim();
+            if (input.toUpperCase() === 'EZEZ') {
+                document.getElementById('verifyContainer').classList.add('hidden');
+                showConfirms();
+            } else {
+                alert('验证码错误！\n\n💡 提示：就是字面意思 "EZEZ"（easy easy）');
+                document.getElementById('captchaInput').value = '';
+            }
+        }
+
+        // 支持回车键提交验证码
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('captchaInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    verifyCaptcha();
+                }
+            });
+        });
+
+        function showConfirms() {
+            if (step < confirmMessages.length) {
+                if (confirm(confirmMessages[step])) {
+                    step++;
+                    showConfirms();
+                } else {
+                    alert('操作已取消');
+                    step = 0;
+                    document.getElementById('mainContainer').classList.remove('hidden');
+                }
+            } else {
+                startRickroll();
+            }
+        }
+
+        function startRickroll() {
+            // 创建全屏遮盖
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: black;
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                color: white;
+                font-size: 24px;
+            `;
+            overlay.innerHTML = `
+                <p>✅ 验证通过！</p>
+                <p>正在加载重要更新...</p>
+                <div style="margin-top: 20px; font-size: 14px; color: #999;">
+                    即将为您跳转...
+                </div>
+            `;
+            document.body.appendChild(overlay);
+
+            // 3秒后跳转到 Rickroll
+            setTimeout(() => {
+                window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
