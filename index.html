@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>安全验证</title>
+    <title>智商测试</title>
     <style>
         :root {
-            --bg: #0f0f0f;
-            --card: #1a1a1a;
-            --border: #2a2a2a;
-            --text: #e0e0e0;
-            --dim: #888;
-            --accent: #4ade80;
-            --danger: #ef4444;
+            --bg: #0a0a0a;
+            --card: #141414;
+            --border: #252525;
+            --text: #c0c0c0;
+            --dim: #666;
+            --accent: #ff6b35;
+            --green: #4ade80;
         }
 
         * {
@@ -24,53 +24,59 @@
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            letter-spacing: 0.5px;
         }
 
         .card {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 40px 32px;
+            border-radius: 12px;
+            padding: 36px 28px;
             width: 100%;
-            max-width: 420px;
+            max-width: 460px;
             text-align: center;
-            transition: all 0.3s;
+            transition: opacity 0.2s;
         }
 
-        .icon {
-            font-size: 48px;
-            margin-bottom: 16px;
+        .card-header {
+            font-size: 13px;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
         }
 
         h2 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 8px;
+            font-size: 22px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: #fff;
         }
 
         .subtitle {
             color: var(--dim);
-            font-size: 14px;
-            margin-bottom: 32px;
-            line-height: 1.5;
+            font-size: 13px;
+            margin-bottom: 28px;
+            line-height: 1.6;
         }
 
         .btn {
             width: 100%;
-            padding: 14px;
+            padding: 13px;
             border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.15s;
             font-family: inherit;
+            letter-spacing: 1px;
         }
 
         .btn-primary {
@@ -78,267 +84,503 @@
             color: #000;
         }
         .btn-primary:hover {
-            background: #e5e5e5;
+            background: #e0e0e0;
         }
 
-        .btn-ghost {
+        .btn-outline {
             background: transparent;
             color: var(--dim);
             border: 1px solid var(--border);
             margin-top: 8px;
         }
-        .btn-ghost:hover {
-            border-color: #555;
-            color: #ccc;
+        .btn-outline:hover {
+            border-color: #444;
+            color: #aaa;
         }
 
-        /* 人机验证 */
-        .captcha-display {
-            background: #111;
+        .captcha-box {
+            background: #0d0d0d;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px;
-            margin: 24px 0;
-            font-family: 'Courier New', monospace;
-            font-size: 32px;
-            font-weight: bold;
-            letter-spacing: 12px;
-            user-select: none;
-            color: #fff;
-            position: relative;
+            border-radius: 6px;
+            padding: 22px;
+            margin: 20px 0;
         }
 
-        .captcha-display::after {
-            content: '';
-            position: absolute;
-            inset: 0;
+        .captcha-text {
+            font-family: 'Courier New', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 14px;
+            color: #fff;
+            user-select: none;
             background: repeating-linear-gradient(
-                0deg,
+                -45deg,
                 transparent,
                 transparent 2px,
-                rgba(255,255,255,0.01) 2px,
-                rgba(255,255,255,0.01) 4px
+                rgba(255,255,255,0.008) 2px,
+                rgba(255,255,255,0.008) 4px
             );
-            border-radius: 8px;
-            pointer-events: none;
+            padding: 10px;
+            border-radius: 4px;
         }
 
         .input-field {
             width: 100%;
-            padding: 12px 16px;
-            background: #111;
+            padding: 11px 14px;
+            background: #0d0d0d;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 6px;
             color: #fff;
-            font-size: 16px;
+            font-size: 15px;
             text-align: center;
             font-family: inherit;
             outline: none;
             transition: border-color 0.2s;
+            letter-spacing: 2px;
         }
         .input-field:focus {
-            border-color: #555;
+            border-color: #444;
         }
         .input-field::placeholder {
-            color: #444;
+            color: #3a3a3a;
         }
 
-        .error-msg {
-            color: var(--danger);
-            font-size: 13px;
+        .error {
+            color: #ef4444;
+            font-size: 12px;
             margin-top: 8px;
             display: none;
         }
-        .error-msg.show {
+        .error.show {
             display: block;
         }
 
         .hint {
-            color: var(--dim);
-            font-size: 12px;
-            margin-top: 12px;
+            color: #444;
+            font-size: 11px;
+            margin-top: 10px;
         }
 
-        /* 确认卡片堆叠 */
-        .confirm-stack {
+        .question-block {
+            background: #0d0d0d;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 20px;
+            margin: 16px 0;
+            text-align: left;
+        }
+
+        .question-text {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 16px;
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        .options-grid {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin: 20px 0;
+            gap: 8px;
         }
 
-        .confirm-item {
-            background: #141414;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 16px;
+        .option {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            width: 100%;
+            padding: 12px 14px;
+            background: #111;
+            border: 1px solid #1f1f1f;
+            border-radius: 6px;
+            color: #999;
+            font-size: 13px;
+            cursor: pointer;
             text-align: left;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 14px;
+            transition: all 0.15s;
+            font-family: inherit;
+            letter-spacing: 0.5px;
+            line-height: 1.5;
+            word-break: break-all;
+        }
+        .option:hover {
+            border-color: #333;
+            color: #ccc;
+            background: #161616;
+        }
+        .option.selected {
+            border-color: #555;
+            color: #fff;
+            background: #1a1a1a;
+        }
+        .option.wrong-flash {
+            border-color: #ef4444 !important;
+            animation: shake 0.4s;
         }
 
-        .confirm-item .check-dot {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            border: 1px solid #444;
-            flex-shrink: 0;
-            display: flex;
+        .option .letter-tag {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.15s;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            background: #1a1a1a;
+            color: #666;
+            font-size: 11px;
+            font-weight: 600;
+            flex-shrink: 0;
+            letter-spacing: 0;
         }
-
-        .confirm-item .check-dot.checked {
-            background: var(--accent);
-            border-color: var(--accent);
+        .option.selected .letter-tag {
+            background: #fff;
             color: #000;
-            font-size: 12px;
         }
 
-        .confirm-item .label {
-            color: #ccc;
-            font-size: 13px;
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            50% { transform: translateX(6px); }
+            75% { transform: translateX(-4px); }
         }
 
-        /* 进度条 */
         .progress-wrap {
             width: 100%;
-            height: 4px;
-            background: var(--border);
+            height: 3px;
+            background: #1a1a1a;
             border-radius: 2px;
-            margin: 20px 0 24px;
+            margin: 20px 0;
             overflow: hidden;
         }
         .progress-bar {
             height: 100%;
-            background: var(--accent);
+            background: #fff;
             border-radius: 2px;
-            transition: width 0.3s;
+            transition: width 0.4s;
+            width: 0%;
         }
 
-        /* 加载动画 */
-        .loading-dots {
+        /* 疯狂验证页 - 交互式 */
+        .verify-list {
             display: flex;
-            gap: 6px;
-            justify-content: center;
-            margin: 16px 0;
+            flex-direction: column;
+            gap: 14px;
+            margin: 20px 0;
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 4px;
         }
-        .loading-dots span {
-            width: 8px;
-            height: 8px;
-            background: #555;
-            border-radius: 50%;
-            animation: bounce 1.2s infinite;
+        .verify-list::-webkit-scrollbar {
+            width: 3px;
         }
-        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+        .verify-list::-webkit-scrollbar-thumb {
+            background: #2a2a2a;
+            border-radius: 3px;
+        }
 
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-            40% { transform: scale(1); opacity: 1; }
+        .verify-item {
+            background: #0d0d0d;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px;
+            text-align: left;
+            transition: all 0.2s;
+        }
+        .verify-item.done {
+            border-color: #1a3a1a;
+        }
+        .verify-item.failed {
+            border-color: #3a1a1a;
+        }
+
+        .v-label {
+            font-size: 11px;
+            color: #555;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+        .v-task {
+            font-size: 13px;
+            color: #ccc;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .v-status {
+            font-size: 11px;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        .v-status.correct {
+            color: #4ade80;
+        }
+        .v-status.wrong {
+            color: #ef4444;
+        }
+        .v-status.pending {
+            color: #555;
+        }
+
+        /* 滑块验证 */
+        .slider-wrap {
+            position: relative;
+            width: 100%;
+            height: 44px;
+            background: #111;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #1f1f1f;
+            user-select: none;
+        }
+        .slider-track {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: #1a2a1a;
+            border-radius: 6px;
+            transition: width 0.1s;
+            width: 0%;
+        }
+        .slider-thumb {
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 40px;
+            height: 40px;
+            background: #2a2a2a;
+            border-radius: 4px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #888;
+            transition: left 0.05s;
+            z-index: 2;
+        }
+        .slider-thumb:active {
+            cursor: grabbing;
+            background: #3a3a3a;
+        }
+        .slider-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #555;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 拼图点击 */
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+        }
+        .puzzle-cell {
+            aspect-ratio: 1;
+            background: #111;
+            border: 1px solid #1f1f1f;
+            border-radius: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.15s;
+        }
+        .puzzle-cell:hover {
+            background: #1a1a1a;
+            border-color: #333;
+        }
+        .puzzle-cell.clicked {
+            background: #1a2a1a;
+            border-color: #4ade80;
+        }
+
+        /* 多次点击 */
+        .click-target {
+            width: 100%;
+            height: 80px;
+            background: #111;
+            border: 1px solid #1f1f1f;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            transition: all 0.1s;
+            user-select: none;
+        }
+        .click-target:active {
+            transform: scale(0.95);
+            background: #1a1a1a;
+        }
+        .click-counter {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            margin-top: 6px;
+        }
+
+        /* 结果页 */
+        .score-display {
+            font-size: 72px;
+            font-weight: 200;
+            color: #fff;
+            margin: 8px 0;
+            letter-spacing: 2px;
+        }
+        .score-label {
+            font-size: 13px;
+            color: var(--dim);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .score-negative {
+            color: #ef4444;
+        }
+        .score-zero {
+            color: #fbbf24;
         }
     </style>
 </head>
 <body>
 
-    <!-- ==================== 第一屏：入口 ==================== -->
+    <!-- ========== 入口 ========== -->
     <div class="card" id="screen-intro">
-        <div class="icon">🔐</div>
-        <h2>安全验证</h2>
-        <p class="subtitle">此页面需要验证您的身份后才能继续访问。<br>请点击下方按钮开始验证流程。</p>
-        <button class="btn btn-primary" onclick="goScreen('captcha')">开始验证</button>
+        <div class="card-header">INTELLIGENCE QUOTIENT TEST</div>
+        <h2>智商测试</h2>
+        <p class="subtitle">本测试由国际智商协会认证<br>共 5 道题，预计用时 2 分钟<br>请如实作答，结果将严格保密</p>
+        <button class="btn btn-primary" onclick="goScreen('captcha')">开始测试</button>
+        <button class="btn btn-outline" onclick="alert('此功能不可用')">放弃测试</button>
     </div>
 
-    <!-- ==================== 第二屏：人机验证 ==================== -->
+    <!-- ========== 人机验证 ========== -->
     <div class="card" id="screen-captcha" style="display:none;">
-        <div class="icon">🤖</div>
-        <h2>人机验证</h2>
-        <p class="subtitle">请输入下方显示的验证码，证明您不是机器人</p>
-
-        <div class="captcha-display">EZEZ</div>
-
-        <input type="text" class="input-field" id="captchaInput" placeholder="输入验证码" maxlength="4" autocomplete="off">
-        <p class="error-msg" id="captchaError">验证码不正确，请重试</p>
-        <p class="hint">不区分大小写 · 看清楚再填</p>
-
-        <div style="margin-top: 24px;">
-            <button class="btn btn-primary" onclick="checkCaptcha()">确认</button>
-            <button class="btn btn-ghost" onclick="goScreen('intro')">返回</button>
+        <div class="card-header">SECURITY CHECK</div>
+        <h2>身份验证</h2>
+        <p class="subtitle">为确保测试结果准确，请先验证您是人类</p>
+        <div class="captcha-box">
+            <div class="captcha-text">EZEZ</div>
+            <p style="color:#555;font-size:12px;margin-top:10px;">请输入上方验证码</p>
+            <input type="text" class="input-field" id="captchaInput" placeholder="输入验证码" maxlength="4" autocomplete="off" style="margin-top:12px;">
+            <p class="error" id="captchaError">验证码错误</p>
+            <p class="hint">不区分大小写</p>
         </div>
+        <button class="btn btn-primary" onclick="checkCaptcha()">确认</button>
+        <button class="btn btn-outline" onclick="goScreen('intro')">返回</button>
     </div>
 
-    <!-- ==================== 第三屏：多重确认 ==================== -->
-    <div class="card" id="screen-confirm" style="display:none;">
-        <div class="icon">⚠️</div>
-        <h2 id="confirmTitle">确认操作</h2>
-        <p class="subtitle" id="confirmDesc">请勾选以下所有确认项以继续</p>
-
+    <!-- ========== 测试题 ========== -->
+    <div class="card" id="screen-quiz" style="display:none;">
+        <div class="card-header" id="quizHeader">第 1 / 5 题</div>
         <div class="progress-wrap">
-            <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+            <div class="progress-bar" id="quizProgress"></div>
         </div>
-
-        <div class="confirm-stack" id="confirmStack"></div>
-
-        <p class="error-msg" id="confirmError">请勾选所有确认项</p>
-
-        <div style="margin-top: 16px;">
-            <button class="btn btn-primary" id="btnConfirmNext" onclick="handleConfirmNext()">继续</button>
-            <button class="btn btn-ghost" onclick="resetAll()">取消</button>
+        <div class="question-block">
+            <p class="question-text" id="questionText"></p>
+            <div class="options-grid" id="optionsContainer"></div>
         </div>
+        <p class="error" id="quizError">请先选择一个答案</p>
+        <button class="btn btn-primary" id="btnNextQuestion" onclick="nextQuestion()" style="margin-top:16px;">下一题</button>
     </div>
 
-    <!-- ==================== 第四屏：加载跳转 ==================== -->
-    <div class="card" id="screen-loading" style="display:none;">
-        <div class="icon">✅</div>
-        <h2>验证通过</h2>
-        <p class="subtitle">正在为您加载内容...</p>
-        <div class="loading-dots">
-            <span></span><span></span><span></span>
+    <!-- ========== 终极验证页（交互式） ========== -->
+    <div class="card" id="screen-verify" style="display:none;">
+        <div class="card-header">FINAL VERIFICATION</div>
+        <h2>终极验证</h2>
+        <p class="subtitle">在显示结果之前，请完成以下所有交互验证</p>
+        <div class="progress-wrap">
+            <div class="progress-bar" id="verifyProgress" style="width:0%;"></div>
         </div>
-        <p style="color: #555; font-size: 12px; margin-top: 8px;">即将跳转</p>
+        <div class="verify-list" id="verifyList"></div>
+        <p class="error" id="verifyError">请完成所有验证项后提交</p>
+        <button class="btn btn-primary" id="btnVerifySubmit" onclick="submitVerification()" style="margin-top:8px;">提交验证</button>
+    </div>
+
+    <!-- ========== 结果页 ========== -->
+    <div class="card" id="screen-final" style="display:none;">
+        <div class="card-header">TEST RESULT</div>
+        <h2>测试结果</h2>
+        <div class="score-display" id="iqScore"></div>
+        <p class="score-label" id="iqComment"></p>
+        <button class="btn btn-outline" onclick="location.reload()">重新测试</button>
     </div>
 
     <script>
-        // ============ 确认项配置 ============
-        const confirmSteps = [
-            { label: '我确认要访问此页面', weight: 1 },
-            { label: '我知道自己在做什么', weight: 1 },
-            { label: '我愿意承担一切后果', weight: 1 },
-            { label: '我不是误点进来的', weight: 1 },
-            { label: '我准备好面对接下来的内容', weight: 1 },
-            { label: '以上所有选项我都是认真勾选的，不是随便点的', weight: 1 },
+        // ============ 题目数据 ============
+        const questions = [
+            {
+                text: "1. 如果今天是星期三，那么贝利亚有没有唱歌",
+                options: ["确实", "没问题", "后天吧", "JSHGDHJAUWDHAWJJDWHAS"],
+                correct: 3,
+                wrongMsg: ["你真的认真想过吗？", "接近了，但还不够接近真相", "这个答案太正常了，不符合本测试的风格"]
+            },
+            {
+                text: "2. 一根香蕉加一根香蕉等于几根香蕉？",
+                options: ["2 根", "1 根（如果你把它们捏在一起）", "0 根（因为我已经吃掉了）", "这取决于你对香蕉的定义"],
+                correct: 3,
+                wrongMsg: ["看来你的思维比较直来直去", "有一定创造力，但还不够", "逻辑上说得通，但哲学上站不住脚"]
+            },
+            {
+                text: "3. 以下哪句话是正确的？",
+                options: ["这句话是错的", "A 选项是对的", "B 选项是错的", "以上全部正确"],
+                correct: 3,
+                wrongMsg: ["wadgyhdiugawvdabwdyvhd", "菜就多练", "你是猪吗"]
+            },
+            {
+                text: "4. 你走进一间屋子，里面有一张床、一张桌子和一把椅子。屋子里没有窗户。请问现在几点？",
+                options: ["好", "白天", "管他几点，先躺下再说", "你说的对"],
+                correct: 3,
+                wrongMsg: ["XSWL", "去上幼儿园吧", "ezezezeze"]
+            },
+            {
+                text: "5. 你现在有很多狗狗 2只黄 9只蓝 999999只黑 那么你有几条香蕉在跳舞?",
+                options: ["对", "错", "可能吧", "114514"],
+                correct: 3,
+                wrongMsg: ["FWWWWWWW", "你是人机吗", "没实力啊"]
+            },
         ];
 
-        let currentStep = 0;
-        const stepsPerPage = 3; // 每页显示几个确认项
+        let currentQuestion = 0;
+        let selectedOption = -1;
+        let quizAnswers = [];
+        let verifyResults = new Array(8).fill(null); // null=未完成, true=通过, false=失败
 
         // ============ 屏幕切换 ============
         function goScreen(name) {
-            ['intro', 'captcha', 'confirm', 'loading'].forEach(id => {
+            ['intro', 'captcha', 'quiz', 'verify', 'final'].forEach(id => {
                 document.getElementById('screen-' + id).style.display = 'none';
             });
             const target = document.getElementById('screen-' + name);
             if (target) target.style.display = 'block';
 
-            if (name === 'confirm') {
-                currentStep = 0;
-                renderConfirmBatch();
+            if (name === 'quiz') {
+                currentQuestion = 0;
+                quizAnswers = [];
+                loadQuestion();
+            }
+            if (name === 'verify') {
+                verifyResults = new Array(8).fill(null);
+                renderAllVerifications();
+                updateVerifyProgress();
             }
         }
 
-        // ============ 人机验证 ============
+        // ============ 验证码 ============
         function checkCaptcha() {
             const input = document.getElementById('captchaInput').value.trim();
             const errorEl = document.getElementById('captchaError');
-
             if (input.toUpperCase() === 'EZEZ') {
                 errorEl.classList.remove('show');
                 document.getElementById('captchaInput').value = '';
-                goScreen('confirm');
+                goScreen('quiz');
             } else {
                 errorEl.classList.add('show');
                 document.getElementById('captchaInput').value = '';
@@ -346,7 +588,6 @@
             }
         }
 
-        // 回车提交
         document.addEventListener('DOMContentLoaded', () => {
             const input = document.getElementById('captchaInput');
             if (input) {
@@ -356,95 +597,537 @@
             }
         });
 
-        // ============ 确认流程 ============
-        function renderConfirmBatch() {
-            const stack = document.getElementById('confirmStack');
-            const title = document.getElementById('confirmTitle');
-            const desc = document.getElementById('confirmDesc');
-            const errorEl = document.getElementById('confirmError');
-            const btn = document.getElementById('btnConfirmNext');
-            const progressBar = document.getElementById('progressBar');
+        // ============ 题目 ============
+        function loadQuestion() {
+            const q = questions[currentQuestion];
+            document.getElementById('quizHeader').textContent = `第 ${currentQuestion + 1} / ${questions.length} 题`;
+            document.getElementById('questionText').textContent = q.text;
+            document.getElementById('quizProgress').style.width = ((currentQuestion / questions.length) * 100) + '%';
+            document.getElementById('quizError').classList.remove('show');
+            document.getElementById('btnNextQuestion').textContent = 
+                currentQuestion === questions.length - 1 ? '提交测试' : '下一题';
+            selectedOption = -1;
 
-            errorEl.classList.remove('show');
-
-            const start = currentStep;
-            const end = Math.min(currentStep + stepsPerPage, confirmSteps.length);
-            const batch = confirmSteps.slice(start, end);
-
-            // 更新标题
-            if (currentStep === 0) {
-                title.textContent = '安全确认';
-                desc.textContent = '请勾选以下确认项以继续';
-            } else {
-                title.textContent = '再次确认';
-                desc.textContent = '还需要确认以下内容';
-            }
-
-            // 更新进度条
-            const progress = Math.round((currentStep / confirmSteps.length) * 100);
-            progressBar.style.width = progress + '%';
-
-            // 渲染确认项
-            stack.innerHTML = '';
-            batch.forEach((item, i) => {
-                const div = document.createElement('div');
-                div.className = 'confirm-item';
-                div.innerHTML = `
-                    <div class="check-dot" data-index="${start + i}" onclick="toggleCheck(this)"></div>
-                    <span class="label">${item.label}</span>
-                `;
-                stack.appendChild(div);
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D'];
+            q.options.forEach((optText, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'option';
+                btn.innerHTML = `<span class="letter-tag">${letters[i]}</span><span>${optText}</span>`;
+                btn.onclick = () => selectOption(i, btn);
+                container.appendChild(btn);
             });
+        }
 
-            // 按钮文字
-            if (end >= confirmSteps.length) {
-                btn.textContent = '完成验证';
+        function selectOption(index, btn) {
+            document.querySelectorAll('#optionsContainer .option').forEach(o => o.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedOption = index;
+            document.getElementById('quizError').classList.remove('show');
+        }
+
+        function nextQuestion() {
+            if (selectedOption === -1) {
+                document.getElementById('quizError').textContent = '请先选择一个答案';
+                document.getElementById('quizError').classList.add('show');
+                return;
+            }
+
+            const q = questions[currentQuestion];
+            const isCorrect = selectedOption === q.correct;
+            quizAnswers.push({ question: currentQuestion, correct: isCorrect });
+
+            if (!isCorrect) {
+                const allOptions = document.querySelectorAll('#optionsContainer .option');
+                allOptions[selectedOption].classList.add('wrong-flash');
+                document.getElementById('quizError').textContent = q.wrongMsg[selectedOption] || "答案错误";
+                document.getElementById('quizError').classList.add('show');
+                setTimeout(() => {
+                    allOptions[selectedOption].classList.remove('wrong-flash');
+                    advanceQuestion();
+                }, 800);
+                return;
+            }
+
+            advanceQuestion();
+        }
+
+        function advanceQuestion() {
+            document.getElementById('quizError').classList.remove('show');
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
             } else {
-                btn.textContent = '继续';
+                document.getElementById('quizProgress').style.width = '100%';
+                goScreen('verify');
             }
         }
 
-        function toggleCheck(dot) {
-            dot.classList.toggle('checked');
-            dot.textContent = dot.classList.contains('checked') ? '✓' : '';
+        // ============ 终极验证 - 全部交互式 ============
+        function renderAllVerifications() {
+            const list = document.getElementById('verifyList');
+            list.innerHTML = '';
+
+            // 验证1：滑块到底
+            list.appendChild(buildVerificationItem(0, '验证 1/8', '将滑块拖动到最右边', createSlider(0)));
+
+            // 验证2：连续点击20次
+            list.appendChild(buildVerificationItem(1, '验证 2/8', '连续点击下方按钮 20 次', createClickCounter(1, 20)));
+
+            // 验证3：找到唯一不同的颜色块
+            list.appendChild(buildVerificationItem(2, '验证 3/8', '在 16 个方块中找到颜色不同的那一个并点击', createColorPuzzle(2)));
+
+            // 验证4：滑块再拖一次（但是反向）
+            list.appendChild(buildVerificationItem(3, '验证 4/8', '将滑块拖动到最左边', createSlider(3, true)));
+
+            // 验证5：疯狂点击10秒内点50次
+            list.appendChild(buildVerificationItem(4, '验证 5/8', '10 秒内点击按钮 50 次', createTimedClicker(4, 50, 10)));
+
+            // 验证6：点9个格子按顺序
+            list.appendChild(buildVerificationItem(5, '验证 6/8', '按从小到大的顺序依次点击数字', createNumberGrid(5)));
+
+            // 验证7：滑块拖到正中间（±5%容差）
+            list.appendChild(buildVerificationItem(6, '验证 7/8', '将滑块精确停在正中间（50%位置）', createSlider(6, false, true)));
+
+            // 验证8：按住按钮不放3秒
+            list.appendChild(buildVerificationItem(7, '验证 8/8', '按住下方按钮持续 3 秒钟', createHoldButton(7, 3)));
         }
 
-        function handleConfirmNext() {
-            const start = currentStep;
-            const end = Math.min(currentStep + stepsPerPage, confirmSteps.length);
-            const errorEl = document.getElementById('confirmError');
+        function buildVerificationItem(index, label, task, innerHtml) {
+            const div = document.createElement('div');
+            div.className = 'verify-item';
+            div.id = 'verify-item-' + index;
+            div.innerHTML = `
+                <div class="v-label">${label}</div>
+                <div class="v-task">${task}</div>
+                ${innerHtml}
+                <div class="v-status pending" id="v-status-${index}">等待完成</div>
+            `;
+            return div;
+        }
 
-            // 检查当前页所有项是否都勾选
-            const allChecked = [];
-            for (let i = start; i < end; i++) {
-                const dot = document.querySelector(`.check-dot[data-index="${i}"]`);
-                allChecked.push(dot && dot.classList.contains('checked'));
+        function updateVerifyStatus(index, passed, msg) {
+            verifyResults[index] = passed;
+            const item = document.getElementById('verify-item-' + index);
+            const status = document.getElementById('v-status-' + index);
+            if (item) {
+                item.classList.remove('done', 'failed');
+                item.classList.add(passed ? 'done' : 'failed');
             }
+            if (status) {
+                status.className = 'v-status ' + (passed ? 'correct' : 'wrong');
+                status.textContent = msg;
+            }
+            updateVerifyProgress();
+        }
 
-            if (allChecked.every(Boolean)) {
-                errorEl.classList.remove('show');
+        function updateVerifyProgress() {
+            const completed = verifyResults.filter(r => r !== null).length;
+            const total = 8;
+            document.getElementById('verifyProgress').style.width = Math.round((completed / total) * 100) + '%';
+        }
 
-                if (end >= confirmSteps.length) {
-                    // 全部完成
-                    goScreen('loading');
-                    setTimeout(() => {
-                        window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
-                    }, 2500);
-                } else {
-                    // 下一批
-                    currentStep = end;
-                    renderConfirmBatch();
-                }
+        // --- 验证1/4/7：滑块 ---
+        function createSlider(index, reverse = false, middle = false) {
+            const uid = 'slider-' + index;
+            let html = `<div class="slider-wrap" id="${uid}-wrap">
+                <div class="slider-track" id="${uid}-track"></div>
+                <div class="slider-thumb" id="${uid}-thumb">${reverse ? '◄' : '►'}</div>
+                <div class="slider-text" id="${uid}-text">${middle ? '拖到中间' : (reverse ? '拖到最左边' : '拖到最右边')}</div>
+            </div>`;
+            
+            setTimeout(() => {
+                const wrap = document.getElementById(uid + '-wrap');
+                const thumb = document.getElementById(uid + '-thumb');
+                const track = document.getElementById(uid + '-track');
+                const text = document.getElementById(uid + '-text');
+                if (!wrap || !thumb) return;
+
+                let dragging = false;
+                let startX, startLeft;
+
+                thumb.addEventListener('mousedown', (e) => {
+                    dragging = true;
+                    startX = e.clientX;
+                    startLeft = thumb.offsetLeft;
+                    thumb.style.cursor = 'grabbing';
+                    e.preventDefault();
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (!dragging) return;
+                    const wrapRect = wrap.getBoundingClientRect();
+                    const maxLeft = wrapRect.width - 40;
+                    let newLeft = startLeft + (e.clientX - startX);
+                    newLeft = Math.max(0, Math.min(maxLeft, newLeft));
+                    thumb.style.left = newLeft + 'px';
+                    const pct = Math.round((newLeft / maxLeft) * 100);
+                    track.style.width = pct + '%';
+                    text.textContent = pct + '%';
+                });
+
+                document.addEventListener('mouseup', () => {
+                    if (!dragging) return;
+                    dragging = false;
+                    thumb.style.cursor = 'grab';
+                    const maxLeft = wrap.getBoundingClientRect().width - 40;
+                    const pct = Math.round((thumb.offsetLeft / maxLeft) * 100);
+
+                    if (middle) {
+                        // 验证7：必须在 45-55% 之间
+                        if (pct >= 45 && pct <= 55) {
+                            updateVerifyStatus(index, true, '精确！停在正中间');
+                        } else {
+                            updateVerifyStatus(index, false, `偏了（${pct}%），请重试`);
+                            // 重置
+                            thumb.style.left = '0px';
+                            track.style.width = '0%';
+                            text.textContent = '拖到中间';
+                        }
+                    } else if (reverse) {
+                        // 验证4：拖到最左边（0%）
+                        if (pct <= 5) {
+                            updateVerifyStatus(index, true, '完成');
+                        } else {
+                            updateVerifyStatus(index, false, '还没到最左边，重试');
+                            thumb.style.left = '0px';
+                            track.style.width = '0%';
+                            text.textContent = '拖到最左边';
+                        }
+                    } else {
+                        // 验证1：拖到最右边（100%）
+                        if (pct >= 95) {
+                            updateVerifyStatus(index, true, '完成');
+                        } else {
+                            updateVerifyStatus(index, false, '还没到最右边，重试');
+                            thumb.style.left = '0px';
+                            track.style.width = '0%';
+                            text.textContent = '拖到最右边';
+                        }
+                    }
+                });
+
+                // 触摸事件
+                thumb.addEventListener('touchstart', (e) => {
+                    dragging = true;
+                    startX = e.touches[0].clientX;
+                    startLeft = thumb.offsetLeft;
+                    e.preventDefault();
+                });
+                document.addEventListener('touchmove', (e) => {
+                    if (!dragging) return;
+                    const wrapRect = wrap.getBoundingClientRect();
+                    const maxLeft = wrapRect.width - 40;
+                    let newLeft = startLeft + (e.touches[0].clientX - startX);
+                    newLeft = Math.max(0, Math.min(maxLeft, newLeft));
+                    thumb.style.left = newLeft + 'px';
+                    const pct = Math.round((newLeft / maxLeft) * 100);
+                    track.style.width = pct + '%';
+                    text.textContent = pct + '%';
+                });
+                document.addEventListener('touchend', () => {
+                    if (!dragging) return;
+                    dragging = false;
+                    const maxLeft = wrap.getBoundingClientRect().width - 40;
+                    const pct = Math.round((thumb.offsetLeft / maxLeft) * 100);
+                    if (middle) {
+                        if (pct >= 45 && pct <= 55) {
+                            updateVerifyStatus(index, true, '精确！停在正中间');
+                        } else {
+                            updateVerifyStatus(index, false, `偏了（${pct}%），请重试`);
+                            thumb.style.left = '0px';
+                            track.style.width = '0%';
+                            text.textContent = '拖到中间';
+                        }
+                    } else if (reverse) {
+                        if (pct <= 5) {
+                            updateVerifyStatus(index, true, '完成');
+                        } else {
+                            updateVerifyStatus(index, false, '还没到最左边，重试');
+                            thumb.style.left = '0px';
+                            track.style.width = '0%';
+                            text.textContent = '拖到最左边';
+                        }
+                    } else {
+                        if (pct >= 95) {
+                            updateVerifyStatus(index, true, '完成');
+                        } else {
+                            updateVerifyStatus(index, false, '还没到最右边，重试');
+                            thumb.style.left = '0px';
+                            track.style.width = '0%';
+                            text.textContent = '拖到最右边';
+                        }
+                    }
+                });
+            }, 100);
+
+            return html;
+        }
+
+        // --- 验证2：连续点击 ---
+        function createClickCounter(index, target) {
+            const uid = 'clicker-' + index;
+            let html = `
+                <div class="click-target" id="${uid}-btn">👆</div>
+                <div class="click-counter" id="${uid}-counter">0 / ${target}</div>
+            `;
+            setTimeout(() => {
+                let count = 0;
+                const btn = document.getElementById(uid + '-btn');
+                const counter = document.getElementById(uid + '-counter');
+                if (!btn) return;
+                btn.addEventListener('click', () => {
+                    if (verifyResults[index] !== null) return;
+                    count++;
+                    counter.textContent = count + ' / ' + target;
+                    if (count >= target) {
+                        updateVerifyStatus(index, true, '完成');
+                        btn.style.opacity = '0.5';
+                    }
+                });
+            }, 100);
+            return html;
+        }
+
+        // --- 验证3：颜色拼图 ---
+        function createColorPuzzle(index) {
+            const uid = 'puzzle-' + index;
+            const baseColor = [60, 60, 70];
+            const oddColor = [60, 65, 70]; // 略微不同
+            const oddIndex = Math.floor(Math.random() * 16);
+            let html = '<div class="puzzle-grid" id="' + uid + '">';
+            for (let i = 0; i < 16; i++) {
+                const isOdd = i === oddIndex;
+                const r = isOdd ? oddColor[0] : baseColor[0];
+                const g = isOdd ? oddColor[1] : baseColor[1];
+                const b = isOdd ? oddColor[2] : baseColor[2];
+                html += `<div class="puzzle-cell" data-index="${i}" style="background:rgb(${r},${g},${b});" onclick="handlePuzzleClick(${index}, ${i}, ${oddIndex}, this)"></div>`;
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function handlePuzzleClick(verifyIndex, clickedIndex, oddIndex, el) {
+            if (verifyResults[verifyIndex] !== null) return;
+            if (clickedIndex === oddIndex) {
+                el.classList.add('clicked');
+                updateVerifyStatus(verifyIndex, true, '找到了！眼力不错');
             } else {
-                errorEl.classList.add('show');
-                document.getElementById('confirmError').textContent = '还有未勾选的项，请全部勾选后再继续';
+                updateVerifyStatus(verifyIndex, false, '找错了，再试试');
+                // 重置所有
+                document.querySelectorAll('#verify-item-' + verifyIndex + ' .puzzle-cell').forEach(c => c.classList.remove('clicked'));
             }
         }
 
-        // ============ 重置 ============
-        function resetAll() {
-            currentStep = 0;
-            goScreen('intro');
+        // --- 验证5：10秒50次 ---
+        function createTimedClicker(index, target, seconds) {
+            const uid = 'timed-' + index;
+            let html = `
+                <div class="click-target" id="${uid}-btn">⏱️</div>
+                <div class="click-counter" id="${uid}-counter">0 / ${target}</div>
+                <div class="click-counter" id="${uid}-timer" style="color:#fbbf24;">剩余 ${seconds} 秒</div>
+            `;
+            setTimeout(() => {
+                let count = 0;
+                let remaining = seconds;
+                let started = false;
+                let timerInterval;
+                const btn = document.getElementById(uid + '-btn');
+                const counter = document.getElementById(uid + '-counter');
+                const timerEl = document.getElementById(uid + '-timer');
+                if (!btn) return;
+
+                btn.addEventListener('click', () => {
+                    if (verifyResults[index] !== null) return;
+                    if (!started) {
+                        started = true;
+                        timerInterval = setInterval(() => {
+                            remaining--;
+                            timerEl.textContent = '剩余 ' + remaining + ' 秒';
+                            if (remaining <= 2) timerEl.style.color = '#ef4444';
+                            if (remaining <= 0) {
+                                clearInterval(timerInterval);
+                                if (count >= target) {
+                                    updateVerifyStatus(index, true, '手速惊人！');
+                                } else {
+                                    updateVerifyStatus(index, false, `时间到！只点了 ${count} 次`);
+                                }
+                                btn.style.opacity = '0.5';
+                            }
+                        }, 1000);
+                    }
+                    count++;
+                    counter.textContent = count + ' / ' + target;
+                    if (count >= target && remaining > 0) {
+                        clearInterval(timerInterval);
+                        updateVerifyStatus(index, true, '手速惊人！');
+                        btn.style.opacity = '0.5';
+                    }
+                });
+            }, 100);
+            return html;
+        }
+
+        // --- 验证6：按顺序点数字 ---
+        function createNumberGrid(index) {
+            const uid = 'numgrid-' + index;
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+            // 随机排列
+            for (let i = numbers.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+            }
+            let html = '<div class="puzzle-grid" id="' + uid + '">';
+            numbers.forEach(n => {
+                html += `<div class="puzzle-cell num-cell" data-num="${n}" id="${uid}-cell-${n}">${n}</div>`;
+            });
+            html += '</div>';
+            setTimeout(() => {
+                let nextExpected = 1;
+                document.querySelectorAll('#' + uid + ' .num-cell').forEach(cell => {
+                    cell.addEventListener('click', () => {
+                        if (verifyResults[index] !== null) return;
+                        const num = parseInt(cell.dataset.num);
+                        if (num === nextExpected) {
+                            cell.classList.add('clicked');
+                            cell.style.opacity = '0.5';
+                            nextExpected++;
+                            if (nextExpected > 9) {
+                                updateVerifyStatus(index, true, '顺序正确！');
+                            }
+                        } else {
+                            updateVerifyStatus(index, false, '顺序错了！从 ' + nextExpected + ' 开始');
+                            // 重置
+                            nextExpected = 1;
+                            document.querySelectorAll('#' + uid + ' .num-cell').forEach(c => {
+                                c.classList.remove('clicked');
+                                c.style.opacity = '1';
+                            });
+                        }
+                    });
+                });
+            }, 100);
+            return html;
+        }
+
+        // --- 验证8：按住3秒 ---
+        function createHoldButton(index, seconds) {
+            const uid = 'hold-' + index;
+            let html = `
+                <div class="click-target" id="${uid}-btn" style="user-select:none;">长按这里</div>
+                <div class="click-counter" id="${uid}-timer">保持按住 ${seconds} 秒</div>
+                <div style="width:100%;height:4px;background:#1a1a1a;border-radius:2px;margin-top:8px;overflow:hidden;">
+                    <div id="${uid}-bar" style="height:100%;background:#4ade80;width:0%;transition:width 0.1s;"></div>
+                </div>
+            `;
+            setTimeout(() => {
+                const btn = document.getElementById(uid + '-btn');
+                const timerEl = document.getElementById(uid + '-timer');
+                const bar = document.getElementById(uid + '-bar');
+                if (!btn) return;
+                let holdStart;
+                let holdInterval;
+                let succeeded = false;
+
+                btn.addEventListener('mousedown', () => {
+                    if (verifyResults[index] !== null) return;
+                    holdStart = Date.now();
+                    succeeded = false;
+                    holdInterval = setInterval(() => {
+                        const elapsed = (Date.now() - holdStart) / 1000;
+                        const pct = Math.min(100, (elapsed / seconds) * 100);
+                        bar.style.width = pct + '%';
+                        timerEl.textContent = '已按住 ' + elapsed.toFixed(1) + ' 秒';
+                        if (elapsed >= seconds && !succeeded) {
+                            succeeded = true;
+                            clearInterval(holdInterval);
+                            updateVerifyStatus(index, true, '耐力不错！');
+                            bar.style.width = '100%';
+                            bar.style.background = '#4ade80';
+                        }
+                    }, 100);
+                });
+
+                btn.addEventListener('mouseup', () => {
+                    clearInterval(holdInterval);
+                    if (!succeeded && verifyResults[index] === null) {
+                        updateVerifyStatus(index, false, '松手太早了！请按住 ' + seconds + ' 秒');
+                        bar.style.width = '0%';
+                        timerEl.textContent = '保持按住 ' + seconds + ' 秒';
+                    }
+                });
+
+                btn.addEventListener('mouseleave', () => {
+                    clearInterval(holdInterval);
+                    if (!succeeded && verifyResults[index] === null && holdStart) {
+                        updateVerifyStatus(index, false, '手指离开了！请按住 ' + seconds + ' 秒');
+                        bar.style.width = '0%';
+                        timerEl.textContent = '保持按住 ' + seconds + ' 秒';
+                        holdStart = null;
+                    }
+                });
+
+                // 触摸事件
+                btn.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    if (verifyResults[index] !== null) return;
+                    holdStart = Date.now();
+                    succeeded = false;
+                    holdInterval = setInterval(() => {
+                        const elapsed = (Date.now() - holdStart) / 1000;
+                        const pct = Math.min(100, (elapsed / seconds) * 100);
+                        bar.style.width = pct + '%';
+                        timerEl.textContent = '已按住 ' + elapsed.toFixed(1) + ' 秒';
+                        if (elapsed >= seconds && !succeeded) {
+                            succeeded = true;
+                            clearInterval(holdInterval);
+                            updateVerifyStatus(index, true, '耐力不错！');
+                            bar.style.width = '100%';
+                        }
+                    }, 100);
+                });
+
+                btn.addEventListener('touchend', () => {
+                    clearInterval(holdInterval);
+                    if (!succeeded && verifyResults[index] === null) {
+                        updateVerifyStatus(index, false, '松手太早了！请按住 ' + seconds + ' 秒');
+                        bar.style.width = '0%';
+                        timerEl.textContent = '保持按住 ' + seconds + ' 秒';
+                    }
+                });
+            }, 100);
+            return html;
+        }
+
+        // ============ 提交验证 ============
+        function submitVerification() {
+            if (verifyResults.some(r => r === null)) {
+                document.getElementById('verifyError').textContent = '还有未完成的验证项';
+                document.getElementById('verifyError').classList.add('show');
+                return;
+            }
+
+            const correctCount = verifyResults.filter(r => r === true).length;
+            const total = 8;
+
+            let iqScore;
+            let comment;
+
+            if (correctCount === total) {
+                iqScore = '0';
+                comment = '恭喜！您全部通过，智商为 0。<br>这是本测试能给出的最高分数。';
+            } else {
+                const wrongCount = total - correctCount;
+                iqScore = `-${wrongCount * 50 + Math.floor(Math.random() * 50)}`;
+                comment = `您有 ${wrongCount} 项验证未通过。<br>智商为负数，建议重新投胎。`;
+            }
+
+            document.getElementById('iqScore').textContent = iqScore;
+            document.getElementById('iqScore').className = 'score-display ' + 
+                (iqScore === '0' ? 'score-zero' : 'score-negative');
+            document.getElementById('iqComment').innerHTML = comment;
+            goScreen('final');
         }
     </script>
 
